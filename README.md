@@ -6,7 +6,7 @@
 go get -u github.com/xylong/gee
 ```
 ### 快速开始
-```
+```go
 package main
 
 import (
