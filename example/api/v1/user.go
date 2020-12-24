@@ -3,12 +3,13 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/xylong/gee"
+	"github.com/xylong/gee/db"
 	"github.com/xylong/gee/example/model"
 	"net/http"
 )
 
 type User struct {
-	*gee.Orm
+	*db.Gorm
 }
 
 func NewUser() *User {
@@ -41,10 +42,10 @@ func (user *User) friends(ctx *gin.Context) gee.Objects {
 }
 
 func (user *User) profile(ctx *gin.Context) gee.Object {
-	u:=model.NewUser()
-	err:=ctx.BindUri(u)
-	gee.Error(err,"ID错误")
-	user.Table("users").First(u,u.ID )
+	u := model.NewUser()
+	err := ctx.BindUri(u)
+	gee.Error(err, "ID错误")
+	user.Table("users").First(u, u.ID)
 	return u
 }
 

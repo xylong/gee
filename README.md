@@ -16,10 +16,10 @@ import (
 
 func main() {
 	gee.Init().
+		Orm(db.NewGorm(), db.NewXorm()).
 		Attach(middleware.NewAuthorize()).
 		Mount("v1", v1.NewUser()).
 		Mount("v2", v2.NewUser()).
 		Go()
 }
-
 ```

@@ -66,8 +66,8 @@ func (gee *Gee) Attach(middleware Middleware) *Gee {
 }
 
 // DB 设置数据库🔗对象
-func (gee *Gee) DB(dba interface{}) *Gee {
-	gee.props = append(gee.props, dba)
+func (gee *Gee) Orm(db ...interface{}) *Gee {
+	gee.props = append(gee.props, db...)
 	return gee
 }
 
