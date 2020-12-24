@@ -14,7 +14,9 @@ type Gee struct {
 
 // Init 初始化
 func Init() *Gee {
-	return &Gee{Engine: gin.New()}
+	gee:= &Gee{Engine: gin.New()}
+	gee.Use(ErrorHandler())
+	return gee
 }
 
 // Go 启动

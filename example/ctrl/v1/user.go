@@ -39,8 +39,16 @@ func (user *User) friends(ctx *gin.Context) gee.Objects {
 	return gee.MakeObjects(users)
 }
 
+func (user *User) profile(ctx *gin.Context) gee.Object {
+	u:=model.NewUser()
+	err:=ctx.BindUri(u)
+	gee.Error(err,"ID错误")
+	return u
+}
+
 func (user *User) Build(gee *gee.Gee) {
 	gee.Handle(http.MethodPost, "/login", user.login)
 	gee.Handle(http.MethodPost, "/register", user.register)
 	gee.Handle(http.MethodGet, "/friends", user.friends)
+	gee.Handle(http.MethodGet, "/users/:id", user.profile)
 }
