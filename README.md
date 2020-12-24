@@ -10,8 +10,11 @@ go get -u github.com/xylong/gee
 package main
 
 import (
-	v1 "blog/ctrl/v1"
 	"github.com/xylong/gee"
+	"github.com/xylong/gee/db"
+	v1 "github.com/xylong/gee/example/api/v1"
+	v2 "github.com/xylong/gee/example/api/v2"
+	"github.com/xylong/gee/example/middleware"
 )
 
 func main() {
@@ -22,4 +25,5 @@ func main() {
 		Mount("v2", v2.NewUser()).
 		Go()
 }
+
 ```
