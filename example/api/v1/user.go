@@ -8,6 +8,7 @@ import (
 )
 
 type User struct {
+	*gee.Orm
 }
 
 func NewUser() *User {
@@ -43,6 +44,7 @@ func (user *User) profile(ctx *gin.Context) gee.Object {
 	u:=model.NewUser()
 	err:=ctx.BindUri(u)
 	gee.Error(err,"ID错误")
+	user.Table("users").First(u,u.ID )
 	return u
 }
 

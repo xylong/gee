@@ -1,10 +1,11 @@
 package model
 
+
 type User struct {
-	ID     int    `json:"id" uri:"id" binding:"required,gt=0"`
-	Name   string `json:"name"`
-	Age    uint8  `json:"age"`
-	Gender int    `json:"gender"`
+	ID     int    `gorm:"id" json:"id" uri:"id" binding:"required,gt=0"`
+	Name   string `gorm:"name" json:"name"`
+	Age    uint8  `gorm:"age" json:"age"`
+	Gender int    `gorm:"gender" json:"gender"`
 }
 
 func NewUser() *User {
