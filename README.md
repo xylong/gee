@@ -15,7 +15,11 @@ import (
 )
 
 func main() {
-	gee.Init().Mount("v1",v1.NewUser()).Go()
+	gee.Init().
+		Attach(middleware.NewAuthorize()).
+		Mount("v1", v1.NewUser()).
+		Mount("v2", v2.NewUser()).
+		Go()
 }
 
 ```
