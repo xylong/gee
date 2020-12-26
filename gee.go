@@ -1,7 +1,9 @@
 package gee
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/xylong/gee/annotate"
 	"log"
 	"net/http"
 	"reflect"
@@ -26,7 +28,7 @@ func Init() *Gee {
 
 // Go 启动
 func (gee *Gee) Go() {
-	if err := gee.Run(":8080"); err != nil {
+	if err := gee.Run(fmt.Sprintf(":%d", InitConfig().Server.Port)); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -73,9 +75,11 @@ func (gee *Gee) Orm(db ...interface{}) *Gee {
 
 // setProp 设置控制器属性
 func (gee *Gee) setProp(controller Controller) {
-	ptr := reflect.ValueOf(controller).Elem()
-	for i := 0; i < ptr.NumField(); i++ {
-		field := ptr.Field(i)
+	valuePtr := reflect.ValueOf(controller).Elem()
+	typePtr := reflect.TypeOf(controller).Elem()
+
+	for i := 0; i < valuePtr.NumField(); i++ {
+		field := valuePtr.Field(i)
 		// 判断控制器属性是否已经实例化
 		if !field.IsNil() || field.Kind() != reflect.Ptr {
 			continue
@@ -84,6 +88,10 @@ func (gee *Gee) setProp(controller Controller) {
 		if p := gee.getProp(field.Type()); p != nil {
 			field.Set(reflect.New(field.Type().Elem()))
 			field.Elem().Set(reflect.ValueOf(p).Elem())
+			// 注解判断
+			if annotate.IsAnnotation(field.Type()) {
+				p.(annotate.Annotation).SetTag(typePtr.Field(i).Tag)
+			}
 		}
 	}
 }

@@ -1,0 +1,6 @@
+server:
+  port: 9000
+
+config:
+  user:
+    age: 18

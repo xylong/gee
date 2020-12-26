@@ -30,5 +30,5 @@ require (
 	golang.org/x/sys v0.0.0-20201223074533-0d417f636930 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/flosch/pongo2.v3 v3.0.0-20141028000813-5e81b817a0c4 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0
 )

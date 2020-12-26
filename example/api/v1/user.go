@@ -3,6 +3,7 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/xylong/gee"
+	"github.com/xylong/gee/annotate"
 	"github.com/xylong/gee/db"
 	"github.com/xylong/gee/example/model"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 
 type User struct {
 	*db.Gorm
+	Age *annotate.Value `prefix:"user.age"`
 }
 
 func NewUser() *User {
@@ -17,7 +19,7 @@ func NewUser() *User {
 }
 
 func (user *User) login(ctx *gin.Context) string {
-	return "version 1"
+	return "version 1" + user.Age.String()
 }
 
 func (user *User) register(ctx *gin.Context) gee.Object {
