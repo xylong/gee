@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/xylong/gee"
 	"github.com/xylong/gee/db"
-	v1 "github.com/xylong/gee/example/api/v1"
-	v2 "github.com/xylong/gee/example/api/v2"
-	"github.com/xylong/gee/example/middleware"
+	v1 "github.com/xylong/gee/example/internal/api/v1"
+	v2 "github.com/xylong/gee/example/internal/api/v2"
+	"github.com/xylong/gee/example/internal/middleware"
 )
 
 func main() {

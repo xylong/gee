@@ -5,7 +5,7 @@ import (
 	"github.com/xylong/gee"
 	"github.com/xylong/gee/annotate"
 	"github.com/xylong/gee/db"
-	"github.com/xylong/gee/example/model"
+	"github.com/xylong/gee/example/internal/model"
 	"net/http"
 )
 
