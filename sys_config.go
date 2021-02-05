@@ -22,7 +22,7 @@ func NewSysConfig() *SysConfig {
 	return &SysConfig{
 		Server: &ServerConfig{
 			Port: 8080,
-			Name: "gee",
+			Name: "Gee",
 		}}
 }
 

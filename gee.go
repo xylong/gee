@@ -3,26 +3,25 @@ package gee
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/xylong/gee/annotate"
 	"log"
 	"net/http"
-	"reflect"
 )
 
 // Gee
 type Gee struct {
 	*gin.Engine
-	group *gin.RouterGroup
-	props []interface{}
+	group       *gin.RouterGroup
+	beanFactory *BeanFactory
 }
 
 // Init 初始化
 func Init() *Gee {
 	gee := &Gee{
-		Engine: gin.New(),
-		props:  make([]interface{}, 0),
+		Engine:      gin.New(),
+		beanFactory: NewBeanFactory(),
 	}
 	gee.Use(ErrorHandler())
+	gee.beanFactory.setBean(InitConfig())
 	return gee
 }
 
@@ -40,7 +39,7 @@ func (gee *Gee) Mount(group string, controllers ...Controller) *Gee {
 	gee.group = gee.Group(group)
 	for _, controller := range controllers {
 		controller.Build(gee)
-		gee.setProp(controller)
+		gee.beanFactory.inject(controller)
 	}
 	return gee
 }
@@ -67,41 +66,7 @@ func (gee *Gee) Attach(middleware Middleware) *Gee {
 	return gee
 }
 
-// DB 设置数据库🔗对象
-func (gee *Gee) Orm(db ...interface{}) *Gee {
-	gee.props = append(gee.props, db...)
+func (gee *Gee) Beans(beans ...interface{}) *Gee {
+	gee.beanFactory.setBean(beans)
 	return gee
-}
-
-// setProp 设置控制器属性
-func (gee *Gee) setProp(controller Controller) {
-	valuePtr := reflect.ValueOf(controller).Elem()
-	typePtr := reflect.TypeOf(controller).Elem()
-
-	for i := 0; i < valuePtr.NumField(); i++ {
-		field := valuePtr.Field(i)
-		// 判断控制器属性是否已经实例化
-		if !field.IsNil() || field.Kind() != reflect.Ptr {
-			continue
-		}
-		// 创建属性
-		if p := gee.getProp(field.Type()); p != nil {
-			field.Set(reflect.New(field.Type().Elem()))
-			field.Elem().Set(reflect.ValueOf(p).Elem())
-			// 注解判断
-			if annotate.IsAnnotation(field.Type()) {
-				p.(annotate.Annotation).SetTag(typePtr.Field(i).Tag)
-			}
-		}
-	}
-}
-
-// getProp 获取控制器属性
-func (gee *Gee) getProp(p reflect.Type) interface{} {
-	for _, prop := range gee.props {
-		if p == reflect.TypeOf(prop) {
-			return prop
-		}
-	}
-	return nil
 }
