@@ -9,6 +9,7 @@ import (
 type ServerConfig struct {
 	Port int32
 	Name string
+	Html string
 }
 
 type SysConfig struct {
@@ -23,6 +24,7 @@ func NewSysConfig() *SysConfig {
 		Server: &ServerConfig{
 			Port: 8080,
 			Name: "Gee",
+			Html: "view/*",
 		}}
 }
 

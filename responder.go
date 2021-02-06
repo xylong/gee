@@ -1,6 +1,7 @@
 package gee
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"reflect"
@@ -13,6 +14,7 @@ func init() {
 		new(StringResponder),
 		new(ObjectResponder),
 		new(SliceResponder),
+		new(ViewResponder),
 	}
 }
 
@@ -65,5 +67,18 @@ func (r SliceResponder) Respond() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		context.Writer.Header().Set("Content-type", "application/json")
 		_, _ = context.Writer.WriteString(string(r(context)))
+	}
+}
+
+type (
+	// View 视图
+	View          string
+	ViewResponder func(ctx *gin.Context) View
+)
+
+// Respond 视图响应
+func (r ViewResponder) Respond() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		context.HTML(http.StatusOK, fmt.Sprintf("%s.html", string(r(context))), nil)
 	}
 }

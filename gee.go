@@ -21,7 +21,14 @@ func Init() *Gee {
 		beanFactory: NewBeanFactory(),
 	}
 	gee.Use(ErrorHandler())
-	gee.beanFactory.setBean(InitConfig())
+	// 加载配置
+	config := InitConfig()
+	gee.beanFactory.setBean(config)
+	// 加载模板
+	if config.Server.Html != "" {
+		gee.LoadHTMLGlob(config.Server.Html)
+	}
+
 	return gee
 }
 

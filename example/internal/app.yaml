@@ -1,5 +1,6 @@
 server:
   port: 10000
+  html: view/*
 
 config:
   user:
