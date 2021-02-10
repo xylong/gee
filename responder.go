@@ -79,6 +79,6 @@ type (
 // Respond 视图响应
 func (r ViewResponder) Respond() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		context.HTML(http.StatusOK, fmt.Sprintf("%s.html", string(r(context))), nil)
+		context.HTML(http.StatusOK, fmt.Sprintf("%s.html", string(r(context))), context.Keys)
 	}
 }

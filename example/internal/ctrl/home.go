@@ -13,6 +13,7 @@ func NewHome() *Home {
 type Home struct{}
 
 func (h *Home) Index(ctx *gin.Context) gee.View {
+	ctx.Set("name", "gee")
 	return "home"
 }
 
