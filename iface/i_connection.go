@@ -18,7 +18,7 @@ type IConnection interface {
 
 	// GetRemoteAddr 获取远程客户段tcp状态
 	// ip、port
-	GetRemoteAddr() *net.TCPAddr
+	GetRemoteAddr() net.Addr
 
 	// Send 发送数据
 	Send([]byte) error
