@@ -21,6 +21,7 @@ type Server struct {
 	Port int
 }
 
+// NewServer 新建服务
 func NewServer(name string) iface.IServer {
 	return &Server{
 		Name:      name,
@@ -28,6 +29,15 @@ func NewServer(name string) iface.IServer {
 		IP:        "0.0.0.0",
 		Port:      8080,
 	}
+}
+
+func handle(conn *net.TCPConn, bytes []byte, length int) error {
+	if length > 0 {
+		if _, err := conn.Write(bytes); err != nil {
+			return fmt.Errorf("write error:%s", err.Error())
+		}
+	}
+	return nil
 }
 
 func (s *Server) Start() {
@@ -47,7 +57,9 @@ func (s *Server) Start() {
 		}
 		fmt.Printf("listening at [%s:%d]", s.IP, s.Port)
 
-		// 3.阻塞⌛️客户端连接，处理业务消息
+		// 3.⌛️客户端连接，处理业务消息
+		var connID uint32
+
 		for {
 			tcpConn, err := listener.AcceptTCP()
 			if err != nil {
@@ -55,21 +67,10 @@ func (s *Server) Start() {
 				continue
 			}
 
-			go func() {
-				for {
-					buf := make([]byte, 1024)
-					length, err := tcpConn.Read(buf)
-					if err != nil {
-						fmt.Println("read error: ", err.Error())
-						continue
-					}
+			conn := NewConnection(tcpConn, connID, handle)
+			conn.Start()
 
-					if _, err := tcpConn.Write(buf[:length]); err != nil {
-						fmt.Println("write error: ", err.Error())
-						continue
-					}
-				}
-			}()
+			connID++
 		}
 	}()
 }

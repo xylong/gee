@@ -6,6 +6,7 @@ import (
 	"net"
 )
 
+// Connection 连接模块
 type Connection struct {
 	// socket
 	Conn *net.TCPConn
@@ -23,6 +24,7 @@ type Connection struct {
 	ExitChan chan struct{}
 }
 
+// NewConnection 新建连接
 func NewConnection(conn *net.TCPConn, id uint32, callback iface.HandleFunc) iface.IConnection {
 	return &Connection{
 		Conn:     conn,
