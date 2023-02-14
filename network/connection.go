@@ -54,7 +54,7 @@ func (c *Connection) read() {
 		go func(request iface.IRequest) {
 			c.Router.Before(request)
 			c.Router.Handle(request)
-			c.Router.Handle(request)
+			c.Router.After(request)
 		}(req)
 	}
 }
