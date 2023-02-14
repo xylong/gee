@@ -17,20 +17,20 @@ type Connection struct {
 	// 是否关闭
 	isClosed bool
 
-	// 业务处理方法
-	handle iface.HandleFunc
+	// 路由
+	Router iface.IRouter
 
 	// 连接退出通知
 	ExitChan chan struct{}
 }
 
 // NewConnection 新建连接
-func NewConnection(conn *net.TCPConn, id uint32, callback iface.HandleFunc) iface.IConnection {
+func NewConnection(conn *net.TCPConn, id uint32, router iface.IRouter) iface.IConnection {
 	return &Connection{
 		Conn:     conn,
 		ID:       id,
-		handle:   callback,
 		isClosed: false,
+		Router:   router,
 		ExitChan: make(chan struct{}, 1),
 	}
 }
@@ -40,16 +40,22 @@ func (c *Connection) read() {
 
 	for {
 		buf := make([]byte, 1024)
-		length, err := c.Conn.Read(buf)
+		_, err := c.Conn.Read(buf)
 		if err != nil {
 			fmt.Println("receive error:", err.Error())
 			continue
 		}
 
-		if err := c.handle(c.Conn, buf, length); err != nil {
-			fmt.Printf("ConnID:%d handle error:%s", c.ID, err.Error())
-			break
+		req := &Request{
+			conn: c,
+			data: buf,
 		}
+
+		go func(request iface.IRequest) {
+			c.Router.Before(request)
+			c.Router.Handle(request)
+			c.Router.Handle(request)
+		}(req)
 	}
 }
 

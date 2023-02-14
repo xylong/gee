@@ -19,6 +19,9 @@ type Server struct {
 
 	// 端口
 	Port int
+
+	// 路由
+	Router iface.IRouter
 }
 
 // NewServer 新建服务
@@ -29,15 +32,6 @@ func NewServer(name string) iface.IServer {
 		IP:        "0.0.0.0",
 		Port:      8080,
 	}
-}
-
-func handle(conn *net.TCPConn, bytes []byte, length int) error {
-	if length > 0 {
-		if _, err := conn.Write(bytes); err != nil {
-			return fmt.Errorf("write error:%s", err.Error())
-		}
-	}
-	return nil
 }
 
 func (s *Server) Start() {
@@ -67,7 +61,7 @@ func (s *Server) Start() {
 				continue
 			}
 
-			conn := NewConnection(tcpConn, connID, handle)
+			conn := NewConnection(tcpConn, connID, s.Router)
 			conn.Start()
 
 			connID++
@@ -84,4 +78,9 @@ func (s *Server) Run() {
 
 	// ⌛️
 	select {}
+}
+
+// Route 设置路由
+func (s *Server) Route(router iface.IRouter) {
+	s.Router = router
 }

@@ -10,4 +10,7 @@ type IServer interface {
 
 	// Run 运行服务
 	Run()
+
+	// Route 设置路由
+	Route(IRouter)
 }
