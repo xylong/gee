@@ -3,6 +3,7 @@ package network
 import (
 	"fmt"
 	"gee/iface"
+	"gee/utils"
 	"net"
 )
 
@@ -25,12 +26,12 @@ type Server struct {
 }
 
 // NewServer 新建服务
-func NewServer(name string) iface.IServer {
+func NewServer() iface.IServer {
 	return &Server{
-		Name:      name,
+		Name:      utils.TCP.Name,
 		IPVersion: "tcp4",
-		IP:        "0.0.0.0",
-		Port:      8080,
+		IP:        utils.TCP.Host,
+		Port:      utils.TCP.Port,
 	}
 }
 

@@ -1,0 +1,8 @@
+{
+  "Name": "gee",
+  "Version": "v0.0.1",
+  "Host": "0.0.0.0",
+  "Port": 8080,
+  "MaxConn": 100,
+  "MaxPackageSize": 1024
+}

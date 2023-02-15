@@ -17,6 +17,7 @@ func (r *pingRouter) Before(request iface.IRequest) {
 	}
 
 }
+
 func (r *pingRouter) Handle(request iface.IRequest) {
 	fmt.Println("handling")
 	if _, err := request.GetConnection().GetTCPConnection().Write([]byte("ping\n")); err != nil {
@@ -24,6 +25,7 @@ func (r *pingRouter) Handle(request iface.IRequest) {
 	}
 
 }
+
 func (r *pingRouter) After(request iface.IRequest) {
 	fmt.Println("after")
 	if _, err := request.GetConnection().GetTCPConnection().Write([]byte("after ping\n")); err != nil {
@@ -33,7 +35,7 @@ func (r *pingRouter) After(request iface.IRequest) {
 }
 
 func main() {
-	s := network.NewServer("Gee")
+	s := network.NewServer()
 	s.Route(&pingRouter{})
 	s.Run()
 }

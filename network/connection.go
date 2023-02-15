@@ -3,6 +3,7 @@ package network
 import (
 	"fmt"
 	"gee/iface"
+	"gee/utils"
 	"net"
 )
 
@@ -39,7 +40,7 @@ func (c *Connection) read() {
 	defer c.Stop()
 
 	for {
-		buf := make([]byte, 1024)
+		buf := make([]byte, utils.TCP.MaxPackageSize)
 		_, err := c.Conn.Read(buf)
 		if err != nil {
 			fmt.Println("receive error:", err.Error())
