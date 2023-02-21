@@ -16,7 +16,7 @@ func NewDataPack() iface.IDataPack {
 }
 
 func (p *DataPack) GetHeaderLength() uint32 {
-	return 0
+	return 8
 }
 
 // Pack 打包消息
@@ -45,23 +45,23 @@ func (p *DataPack) Pack(message iface.IMessage) ([]byte, error) {
 
 // Unpack 消息拆包
 func (p *DataPack) Unpack(data []byte) (iface.IMessage, error) {
-	reader := bytes.NewReader([]byte{})
+	reader := bytes.NewReader(data)
 	message := &Message{}
 
-	// header处理
+	// 1.header处理
 	{
-		// 1.读消息长度
-		if err := binary.Read(reader, binary.LittleEndian, message.Length); err != nil {
-			return nil, err
+		if utils.TCP.MaxPackageSize > 0 && int(message.Length) > utils.TCP.MaxPackageSize {
+			return nil, errors.New("too large message received")
 		}
-		
-		// 2.读消息🆔
-		if err := binary.Read(reader, binary.LittleEndian, message.ID); err != nil {
+
+		// 1.读消息长度
+		if err := binary.Read(reader, binary.LittleEndian, &message.Length); err != nil {
 			return nil, err
 		}
 
-		if utils.TCP.MaxPackageSize > 0 && int(message.Length) > utils.TCP.MaxPackageSize {
-			return nil, errors.New("too large message received")
+		// 2.读消息🆔
+		if err := binary.Read(reader, binary.LittleEndian, &message.ID); err != nil {
+			return nil, err
 		}
 	}
 
